@@ -47,7 +47,7 @@
         android:id="@+id/heartImage"
         android:layout_width="207dp"
         android:layout_height="180dp"
-        android:background="@android:color/transparent"
+        android:background="#00000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,5 +1,6 @@
 package com.example.clicker
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -18,6 +19,9 @@ class PlayActivity : AppCompatActivity() {
         private const val PREFS_FILE = "Results"
     }
 
+    private val SECOND = 1000;
+    private val TIMER_COUNT = 10 * SECOND
+
     lateinit var l_timer: TextView
     lateinit var l_score: TextView
     lateinit var l_game_over: TextView
@@ -33,7 +37,10 @@ class PlayActivity : AppCompatActivity() {
 
     lateinit var pref: SharedPreferences
     lateinit var timer: CountDownTimer
+    lateinit var pauseTimer: CountDownTimer
+    lateinit var resumeTimer: CountDownTimer
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_play)
@@ -56,8 +63,17 @@ class PlayActivity : AppCompatActivity() {
         timer = object: CountDownTimer(10000, 1000) {
             override fun onTick(p0: Long) {
                 currentTime--
-                val time = currentTime + 1
-                l_timer.text = "Time: $time"
+                l_timer.text = "Time: $currentTime"
+
+                val des = (1..4).random()
+                if (des == 4) {
+                    i_bomb.visibility = View.VISIBLE
+                    i_heart.visibility = View.GONE
+
+                } else {
+                    i_bomb.visibility = View.GONE
+                    i_heart.visibility = View.VISIBLE
+                }
             }
 
             override fun onFinish() {
@@ -66,6 +82,7 @@ class PlayActivity : AppCompatActivity() {
                 b_save.isEnabled = true
                 i_heart.isEnabled = false
                 l_game_over.visibility = View.VISIBLE
+                i_heart.visibility = View.VISIBLE
             }
         }
 
@@ -86,6 +103,11 @@ class PlayActivity : AppCompatActivity() {
         i_heart.setOnClickListener {
             currentScore++
             l_score.text = "Score: $currentScore"
+        }
+
+        i_bomb.setOnClickListener {
+            timer.onFinish()
+            timer.cancel()
         }
 
         b_save.setOnClickListener {

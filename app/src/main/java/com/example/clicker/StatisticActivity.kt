@@ -37,7 +37,7 @@ class StatisticActivity : AppCompatActivity() {
             scoreValueView.text = pref.all[key].toString()
             scoreValueView.setTextColor(Color.BLACK)
             dateTextView.gravity = Gravity.CENTER
-            scoreValueView.gravity = Gravity.RIGHT
+            scoreValueView.gravity = Gravity.CENTER
             dateTextView.width = 200
             dateTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18F)
             scoreValueView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18F)
