@@ -60,7 +60,7 @@ class PlayActivity : AppCompatActivity() {
         l_game_over.visibility = View.GONE
         i_heart.isEnabled = false
 
-        timer = object: CountDownTimer(10000, 1000) {
+        timer = object: CountDownTimer(TIMER_COUNT.toLong(), SECOND.toLong()) {
             override fun onTick(p0: Long) {
                 currentTime--
                 l_timer.text = "Time: $currentTime"
