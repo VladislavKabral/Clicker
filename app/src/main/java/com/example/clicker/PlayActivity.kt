@@ -64,15 +64,40 @@ class PlayActivity : AppCompatActivity() {
             override fun onTick(p0: Long) {
                 currentTime--
                 l_timer.text = "Time: $currentTime"
+            }
 
-                val des = (1..4).random()
-                if (des == 4) {
-                    i_bomb.visibility = View.VISIBLE
-                    i_heart.visibility = View.GONE
+            override fun onFinish() {
+                l_timer.text = "Time: 0"
+                b_start.isEnabled = true
+                b_save.isEnabled = true
+                i_heart.isEnabled = false
+                l_game_over.visibility = View.VISIBLE
+                i_heart.visibility = View.VISIBLE
+            }
+        }
 
+        pauseTimer = object : CountDownTimer(SECOND.toLong(), SECOND.toLong()) {
+            override fun onTick(p0: Long) {
+                l_timer.text = "Time: $currentTime"
+            }
+
+            override fun onFinish() {
+                i_bomb.visibility = View.GONE
+                i_heart.visibility = View.VISIBLE
+                resumeTimer.cancel()
+                resumeTimer.start()
+            }
+        }
+
+        resumeTimer = object : CountDownTimer((SECOND * currentTime).toLong(), SECOND.toLong()) {
+            override fun onTick(p0: Long) {
+                if (currentTime == 0) {
+                    pauseTimer.cancel()
+                    resumeTimer.onFinish()
+                    resumeTimer.cancel()
                 } else {
-                    i_bomb.visibility = View.GONE
-                    i_heart.visibility = View.VISIBLE
+                    currentTime--
+                    l_timer.text = "Time: $currentTime"
                 }
             }
 
@@ -94,6 +119,8 @@ class PlayActivity : AppCompatActivity() {
             l_score.text = "Score: $currentScore"
             l_timer.text = "Time: $currentTime"
 
+            i_heart.visibility = View.VISIBLE
+            i_bomb.visibility = View.GONE
             b_start.isEnabled = false
             b_save.isEnabled = false
             i_heart.isEnabled = true
@@ -103,11 +130,15 @@ class PlayActivity : AppCompatActivity() {
         i_heart.setOnClickListener {
             currentScore++
             l_score.text = "Score: $currentScore"
+            generateBomb()
         }
 
         i_bomb.setOnClickListener {
             timer.onFinish()
             timer.cancel()
+            pauseTimer.cancel()
+            resumeTimer.onFinish()
+            resumeTimer.cancel()
         }
 
         b_save.setOnClickListener {
@@ -117,6 +148,21 @@ class PlayActivity : AppCompatActivity() {
             editor.putString(dateFormat.format(date), currentScore.toString())
             editor.apply()
         }
-
     }
+
+    private fun generateBomb() {
+
+        val des = (1..5).random()
+        if (des == 5) {
+            i_bomb.visibility = View.VISIBLE
+            i_heart.visibility = View.GONE
+            timer.cancel()
+            resumeTimer.cancel()
+            pauseTimer.start()
+        } else {
+            i_bomb.visibility = View.GONE
+            i_heart.visibility = View.VISIBLE
+        }
+    }
+
 }
